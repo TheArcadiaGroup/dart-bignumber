@@ -154,7 +154,7 @@ class BigNumber {
     try {
       return toBN(this).toNumber();
     } catch (error) {
-      throw Exception("overflow toNumber " + toString());
+      throw Exception("overflow toNumber ${toString()}");
     }
   }
 
@@ -197,11 +197,11 @@ class BigNumber {
 
     if (value is num) {
       if (value % 1 > 0) {
-        throw Exception("underflow: BigNumber.from " + value.toString());
+        throw Exception("underflow: BigNumber.from $value");
       }
 
       if (value >= maxSafe || value <= -maxSafe) {
-        throw Exception("overflow BigNumber.from " + value.toString());
+        throw Exception("overflow BigNumber.from $value");
       }
 
       return BigNumber.from(value.toString());
@@ -240,7 +240,7 @@ String toHex(dynamic value) {
 
       // Cannot have mulitple negative signs (e.g. "--0x04")
       if (value[0] == "-") {
-        throw Exception("invalid hex value: " + value);
+        throw Exception("invalid hex value: $value");
       }
 
       // Call toHex on the positive component
@@ -252,12 +252,12 @@ String toHex(dynamic value) {
       }
 
       // Negate the value
-      return "-" + value;
+      return "-$value";
     }
 
     // Add a "0x" prefix if missing
     if (!value.contains("0x")) {
-      value = "0x" + value;
+      value = "0x$value";
     }
 
     // Normalize zero
@@ -267,12 +267,12 @@ String toHex(dynamic value) {
 
     // Make the string even length
     if (value.length % 2 > 0) {
-      value = "0x0" + value.substring(2);
+      value = "0x0${value.substring(2)}";
     }
 
     // Trim to smallest even-length string
     while (value.length > 4 && value.substring(0, 4) == "0x00") {
-      value = "0x" + value.substring(4);
+      value = "0x0${value.substring(4)}";
     }
   }
   return value;
@@ -281,7 +281,7 @@ String toHex(dynamic value) {
 BN toBN(dynamic value) {
   var hex = BigNumber.from(value).toHexString();
   if (hex[0] == '-') {
-    return BN('-' + hex.substring(3), 16);
+    return BN('-${hex.substring(3)}', 16);
   }
 
   return BN(hex.substring(2), 16);

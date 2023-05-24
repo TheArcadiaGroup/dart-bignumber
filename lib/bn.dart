@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'dart:ffi';
 import 'dart:math' as math;
 import 'dart:typed_data';
@@ -93,7 +95,7 @@ class BN {
       words = [number & 0x3ffffff, (number / 0x4000000) & 0x3ffffff, 1];
       length = 3;
     } else {
-      throw Exception('number out-of-bounds, number: ' + number.toString());
+      throw Exception('number out-of-bounds, number: $number');
     }
 
     if (endian != 'le') return;
@@ -465,10 +467,10 @@ class BN {
         out = carry.toRadixString(16) + out;
       }
       while (out.length % padding != 0) {
-        out = '0' + out;
+        out = '0$out';
       }
       if (negative != 0) {
-        out = '-' + out;
+        out = '-$out';
       }
       return out.toString();
     }
@@ -492,13 +494,13 @@ class BN {
         }
       }
       if (isZero()) {
-        out = '0' + out;
+        out = '0$out';
       }
       while (out.length % padding != 0) {
-        out = '0' + out;
+        out = '0$out';
       }
       if (negative != 0) {
-        out = '-' + out;
+        out = '-$out';
       }
       return out.toString();
     }
