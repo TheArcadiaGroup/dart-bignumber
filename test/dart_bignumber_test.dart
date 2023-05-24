@@ -16,6 +16,14 @@ void main() {
       expect(number1.add(number2).toNumber(), equals(1));
     });
 
+
+    test('sub', () {
+      var number1 = BigNumber.from(1);
+      var number2 = BigNumber.from(-3);
+
+      expect(number1.sub(number2).toNumber(), equals(4));
+    });
+
     test('div', () {
       var number1 = BigNumber.from(10);
       var number2 = BigNumber.from(2);

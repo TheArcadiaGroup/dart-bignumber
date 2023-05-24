@@ -50,6 +50,10 @@ class BigNumber {
     return toBigNumber(toBN(this).add(toBN(other)));
   }
 
+  BigNumber sub(BigNumber other) {
+    return toBigNumber(toBN(this).sub(toBN(other)));
+  }
+
   BigNumber div(BigNumber other) {
     var o = BigNumber.from(other);
 
