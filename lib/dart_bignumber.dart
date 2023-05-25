@@ -218,6 +218,46 @@ class BigNumber {
     throw Exception('invalid BigNumber value');
   }
 
+  BigNumber operator + (BigNumber other) {
+    return add(other);
+  }
+
+  BigNumber operator - (BigNumber other) {
+    return sub(other);
+  }
+
+  BigNumber operator / (BigNumber other) {
+    return div(other);
+  }
+
+  BigNumber operator * (BigNumber other) {
+    return mul(other);
+  }
+
+  BigNumber operator % (BigNumber other) {
+    return mod(other);
+  }
+
+  BigNumber operator & (BigNumber other) {
+    return and(other);
+  }
+
+  BigNumber operator | (BigNumber other) {
+    return or(other);
+  }
+
+  BigNumber operator ^ (BigNumber other) {
+    return xor(other);
+  }
+
+  BigNumber operator << (int value) {
+    return shl(value);
+  }
+
+  BigNumber operator >> (int value) {
+    return shr(value);
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -225,6 +265,22 @@ class BigNumber {
     if (other.runtimeType != runtimeType) return false;
 
     return toString() == other.toString();
+  }
+
+  bool operator < (BigNumber other) {
+    return lt(other);
+  }
+
+  bool operator <= (BigNumber other) {
+    return lte(other);
+  }
+
+  bool operator > (BigNumber other) {
+    return gt(other);
+  }
+
+  bool operator >= (BigNumber other) {
+    return gte(other);
   }
 
   @override
