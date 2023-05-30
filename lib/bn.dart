@@ -245,8 +245,7 @@ class BN {
       limbLen++;
     }
     limbLen--;
-    limbPow = limbPow ~/ base;
-    limbPow = limbPow | 0;
+    limbPow = (limbPow ~/ base) | 0;
 
     var total = number.length - start;
     var mod = total % limbLen;
@@ -836,7 +835,11 @@ class BN {
     }
     for (; carry != 0 && i < a.length; i++) {
       r = (a.words[i] | 0) + carry;
-      words[i] = r & 0x3ffffff;
+      if (i > words.length - 1) {
+        words.add(r & 0x3ffffff);
+      } else {
+        words[i] = r & 0x3ffffff;
+      }
       carry = r >>> 26;
     }
 
@@ -921,7 +924,11 @@ class BN {
     for (; carry != 0 && i < a.length; i++) {
       r = (a.words[i] | 0) + carry;
       carry = r >> 26;
-      words[i] = r & 0x3ffffff;
+      if (i > words.length - 1) {
+        words.add(r & 0x3ffffff);
+      } else {
+        words[i] = r & 0x3ffffff;
+      }
     }
 
     // Copy rest of the words
