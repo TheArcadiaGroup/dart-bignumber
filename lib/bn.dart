@@ -845,7 +845,11 @@ class BN {
 
     length = a.length;
     if (carry != 0) {
-      words[length] = carry;
+      if (length > words.length - 1) {
+        words.add(carry);
+      } else {
+        words[length] = carry;
+      }
       length++;
       // Copy the rest of the words
     } else if (a != this) {
