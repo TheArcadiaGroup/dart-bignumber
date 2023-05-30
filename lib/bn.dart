@@ -850,7 +850,11 @@ class BN {
       // Copy the rest of the words
     } else if (a != this) {
       for (; i < a.length; i++) {
-        words[i] = a.words[i];
+        if (i > words.length - 1) {
+          words.add(a.words[i]);
+        } else {
+          words[i] = a.words[i];
+        }
       }
     }
 
@@ -934,7 +938,11 @@ class BN {
     // Copy rest of the words
     if (carry == 0 && i < a.length && a != this) {
       for (; i < a.length; i++) {
-        words[i] = a.words[i];
+        if (i > words.length - 1) {
+          words.add(a.words[i]);
+        } else {
+          words[i] = a.words[i];
+        }
       }
     }
 

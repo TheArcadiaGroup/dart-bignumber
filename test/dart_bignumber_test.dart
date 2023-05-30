@@ -18,8 +18,8 @@ void main() {
     });
 
     test('sub', () {
-      var number1 = BigNumber.from(9034091);
-      var number2 = BigNumber.from(-126540498);
+      var number1 = BigNumber.from(-42180166);
+      var number2 = BigNumber.from(135574589);
 
       // expect(number1.sub(number2).toNumber(), equals(4));
       expect((number1 - number2).toNumber(), equals(135574589));
