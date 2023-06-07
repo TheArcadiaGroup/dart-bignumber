@@ -9,6 +9,13 @@ void main() {
       expect(number.abs().toNumber(), equals(1));
     });
 
+    test('unary', () {
+      var number = BigNumber.from(1);
+
+      expect(-number, equals(BigNumber.NEGATIVE_ONE));
+      expect(-(number * BigNumber.from(2)), equals(BigNumber.from(-2)));
+    });
+
     test('add', () {
       var number1 = BigNumber.from(-1);
       var number2 = BigNumber.from(2);

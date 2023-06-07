@@ -218,6 +218,11 @@ class BigNumber {
     throw Exception('invalid BigNumber value');
   }
 
+
+  BigNumber operator -() {
+    return toBigNumber(toBN(this).mul(toBN(-1)));
+  }
+
   BigNumber operator + (BigNumber other) {
     return add(other);
   }
