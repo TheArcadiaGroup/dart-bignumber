@@ -190,9 +190,7 @@ class BN {
       }
     } else {
       var parseLength = number.length - start;
-      for (var i = parseLength % 2 == 0 ? start + 1 : start;
-          i < number.length;
-          i += 2) {
+      for (var i = parseLength % 2 == 0 ? start + 1 : start; i < number.length; i += 2) {
         w = parseHexByte(number, start, i) << off;
         words[j] |= w & 0x3ffffff;
         if (off >= 18) {
@@ -353,45 +351,7 @@ class BN {
     '0000000000000000000000000'
   ];
 
-  var groupSizes = [
-    0,
-    0,
-    25,
-    16,
-    12,
-    11,
-    10,
-    9,
-    8,
-    8,
-    7,
-    7,
-    7,
-    7,
-    6,
-    6,
-    6,
-    6,
-    6,
-    6,
-    6,
-    5,
-    5,
-    5,
-    5,
-    5,
-    5,
-    5,
-    5,
-    5,
-    5,
-    5,
-    5,
-    5,
-    5,
-    5,
-    5
-  ];
+  var groupSizes = [0, 0, 25, 16, 12, 11, 10, 9, 8, 8, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5];
 
   var groupBases = [
     0,
@@ -434,13 +394,9 @@ class BN {
   ];
 
   @override
-  String toString([dynamic base, int? padding]) {
+  String toString([base = 10, int padding = 1]) {
     base = base ?? 10;
-    if (padding != null) {
-      padding = padding | 0;
-    } else {
-      padding = 1;
-    }
+    padding = padding | 0;
 
     String out;
     if (base == 16 || base == 'hex') {
@@ -450,16 +406,16 @@ class BN {
       for (var i = 0; i < length; i++) {
         var w = words[i];
         var word = (((w << off) | carry) & 0xffffff).toRadixString(16);
-        carry = (w >>> (24 - off)) & 0xffffff;
-        if (carry != 0 || i != length - 1) {
-          out = zeros[6 - word.length] + word + out;
-        } else {
-          out = word + out;
-        }
+        carry = (w >> (24 - off)) & 0xffffff;
         off += 2;
         if (off >= 26) {
           off -= 26;
           i--;
+        }
+        if (carry != 0 || i != length - 1) {
+          out = zeros[6 - word.length] + word + out;
+        } else {
+          out = word + out;
         }
       }
       if (carry != 0) {
@@ -471,19 +427,17 @@ class BN {
       if (negative != 0) {
         out = '-$out';
       }
-      return out.toString();
+      return out;
     }
 
-    if (base == (base | 0) && base >= 2 && base <= 36) {
-      // var groupSize = Math.floor(BN.wordSize * Math.LN2 / Math.log(base));
+    if (base >= 2 && base <= 36) {
       var groupSize = groupSizes[base];
-      // var groupBase = Math.pow(base, groupSize);
       var groupBase = groupBases[base];
       out = '';
       var c = clone();
       c.negative = 0;
       while (!c.isZero()) {
-        var r = c.modn(groupBase).toRadixString(base);
+        var r = c.modrn(groupBase).toRadixString(base);
         c = c.idivn(groupBase);
 
         if (!c.isZero()) {
@@ -506,6 +460,79 @@ class BN {
 
     throw Exception('Base should be between 2 and 36');
   }
+
+  // String toString([dynamic base, int? padding]) {
+  //   base = base ?? 10;
+  //   if (padding != null) {
+  //     padding = padding | 0;
+  //   } else {
+  //     padding = 1;
+  //   }
+
+  //   String out;
+  //   if (base == 16 || base == 'hex') {
+  //     out = '';
+  //     var off = 0;
+  //     var carry = 0;
+  //     for (var i = 0; i < length; i++) {
+  //       var w = words[i];
+  //       var word = (((w << off) | carry) & 0xffffff).toRadixString(16);
+  //       carry = (w >>> (24 - off)) & 0xffffff;
+  //       if (carry != 0 || i != length - 1) {
+  //         out = zeros[6 - word.length] + word + out;
+  //       } else {
+  //         out = word + out;
+  //       }
+  //       off += 2;
+  //       if (off >= 26) {
+  //         off -= 26;
+  //         i--;
+  //       }
+  //     }
+  //     if (carry != 0) {
+  //       out = carry.toRadixString(16) + out;
+  //     }
+  //     while (out.length % padding != 0) {
+  //       out = '0$out';
+  //     }
+  //     if (negative != 0) {
+  //       out = '-$out';
+  //     }
+  //     return out.toString();
+  //   }
+
+  //   if (base == (base | 0) && base >= 2 && base <= 36) {
+  //     // var groupSize = Math.floor(BN.wordSize * Math.LN2 / Math.log(base));
+  //     var groupSize = groupSizes[base];
+  //     // var groupBase = Math.pow(base, groupSize);
+  //     var groupBase = groupBases[base];
+  //     out = '';
+  //     var c = clone();
+  //     c.negative = 0;
+  //     while (!c.isZero()) {
+  //       var r = c.modn(groupBase).toRadixString(base);
+  //       c = c.idivn(groupBase);
+
+  //       if (!c.isZero()) {
+  //         out = zeros[groupSize - r.length] + r + out;
+  //       } else {
+  //         out = r + out;
+  //       }
+  //     }
+  //     if (isZero()) {
+  //       out = '0$out';
+  //     }
+  //     while (out.length % padding != 0) {
+  //       out = '0$out';
+  //     }
+  //     if (negative != 0) {
+  //       out = '-$out';
+  //     }
+  //     return out.toString();
+  //   }
+
+  //   throw Exception('Base should be between 2 and 36');
+  // }
 
   num toNumber() {
     var ret = words[0];
@@ -1717,16 +1744,14 @@ class BN {
     assert((carry & ~0x1fff) == 0);
   }
 
-  void permute(List<int> rbt, List<int> rws, List<int> iws, List<int> rtws,
-      List<int> itws, int N) {
+  void permute(List<int> rbt, List<int> rws, List<int> iws, List<int> rtws, List<int> itws, int N) {
     for (var i = 0; i < N; i++) {
       rtws[i] = rws[rbt[i]];
       itws[i] = iws[rbt[i]];
     }
   }
 
-  void transform(List<int> rws, List<int> iws, List<int> rtws, List<int> itws,
-      int N, List<int> rbt) {
+  void transform(List<int> rws, List<int> iws, List<int> rtws, List<int> itws, int N, List<int> rbt) {
     permute(rbt, rws, iws, rtws, itws, N);
 
     for (var s = 1; s < N; s <<= 1) {
@@ -1788,9 +1813,7 @@ class BN {
   List<int> normalize13b(List<int> ws, N) {
     var carry = 0;
     for (var i = 0; i < N / 2; i++) {
-      var w = (ws[2 * i + 1] / N).round() * 0x2000 +
-          (ws[2 * i] / N).round() +
-          carry;
+      var w = (ws[2 * i + 1] / N).round() * 0x2000 + (ws[2 * i] / N).round() + carry;
 
       ws[i] = w & 0x3ffffff;
 
@@ -2046,8 +2069,13 @@ class BN {
     return iushrn(bits, hint, extended);
   }
 
+  // Shift-left
   BN shln(int bits) {
     return clone().ishln(bits);
+  }
+
+  BN ushln(int bits) {
+    return clone().iushln(bits);
   }
 
   /// Shift-right
@@ -2055,8 +2083,8 @@ class BN {
     return clone().ishrn(bits);
   }
 
-  BN ushln(int bits) {
-    return clone().iushln(bits);
+  BN ushrn(int bits) {
+    return clone().iushrn(bits);
   }
 
   bool testn(int bit) {
@@ -2257,8 +2285,7 @@ class BN {
     }
 
     for (var j = m - 1; j >= 0; j--) {
-      var qj = (a.words[b.length + j] | 0) * 0x4000000 +
-          (a.words[b.length + j - 1] | 0);
+      var qj = (a.words[b.length + j] | 0) * 0x4000000 + (a.words[b.length + j - 1] | 0);
 
       // NOTE: (qj / bhi) is (0x3ffffff * 0x4000000 + 0x3ffffff) / 0x2000000 max
       // (0x7ffffff)
@@ -2374,11 +2401,37 @@ class BN {
     return divmod(other, 'mod', false).mod!;
   }
 
-  //umod
+  BN umod(BN other) {
+    return divmod(other, 'mod', true).mod!;
+  }
 
-  //divRound
+  BN? divRound(BN other) {
+    var dm = divmod(other);
 
-  int modn(int number) {
+    if (dm.mod == null || dm.div == null) {
+      return null;
+    }
+
+    // Fast case - exact division
+    if (dm.mod!.isZero()) return dm.div;
+
+    var mod = dm.div!.negative != 0 ? dm.mod!.isub(other) : dm.mod;
+
+    var half = other.ushrn(1);
+    var r2 = other.andln(1);
+    var cmp = mod!.cmp(half);
+
+    // Round down
+    if (cmp < 0 || (r2 == 1 && cmp == 0)) return dm.div;
+
+    // Round up
+    return dm.div!.negative != 0 ? dm.div!.isubn(1) : dm.div!.iaddn(1);
+  }
+
+  int modrn(int number) {
+    var isNegNum = number < 0;
+    if (isNegNum) number = -number;
+
     assert(number <= 0x3ffffff);
     var p = (1 << 26) % number;
 
@@ -2387,7 +2440,11 @@ class BN {
       acc = (p * acc + (words[i] | 0)) % number;
     }
 
-    return acc;
+    return isNegNum ? -acc : acc;
+  }
+
+  int modn(int number) {
+    return modrn(number);
   }
 
   /// In-place division by number
