@@ -95,7 +95,6 @@ void main() {
       expect((number1 << value).toNumber(), equals(544));
     });
 
-
     test('shr', () {
       var number1 = BigNumber.from(34);
       var value = 4;

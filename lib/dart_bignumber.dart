@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:typed_data';
+import 'package:convert/convert.dart' as convert;
 
 import 'bn.dart';
 
@@ -20,8 +21,7 @@ class BigNumber {
   static final ZERO = BigNumber.from(0);
   static final ONE = BigNumber.from(1);
   static final TWO = BigNumber.from(2);
-  static final MAXUINT256 = BigNumber.from(
-      '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+  static final MAXUINT256 = BigNumber.from('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
 
   BigNumber(dynamic constructorGuard, String hex) {
     if (constructorGuard != _constructorGuard) {
@@ -212,54 +212,58 @@ class BigNumber {
     }
 
     if (value is List || value is Iterable) {
-      return BigNumber.from(uint8ListToHex(Uint8List.fromList(value)));
+      var bytes = Uint8List.fromList(value);
+      if (bytes[0] == 0 && bytes.length.isOdd) {
+        bytes = bytes.sublist(1);
+      }
+
+      return BigNumber.from('0x${convert.hex.encode(bytes)}');
     }
 
     throw Exception('invalid BigNumber value');
   }
 
-
   BigNumber operator -() {
     return toBigNumber(toBN(this).mul(toBN(-1)));
   }
 
-  BigNumber operator + (BigNumber other) {
+  BigNumber operator +(BigNumber other) {
     return add(other);
   }
 
-  BigNumber operator - (BigNumber other) {
+  BigNumber operator -(BigNumber other) {
     return sub(other);
   }
 
-  BigNumber operator / (BigNumber other) {
+  BigNumber operator /(BigNumber other) {
     return div(other);
   }
 
-  BigNumber operator * (BigNumber other) {
+  BigNumber operator *(BigNumber other) {
     return mul(other);
   }
 
-  BigNumber operator % (BigNumber other) {
+  BigNumber operator %(BigNumber other) {
     return mod(other);
   }
 
-  BigNumber operator & (BigNumber other) {
+  BigNumber operator &(BigNumber other) {
     return and(other);
   }
 
-  BigNumber operator | (BigNumber other) {
+  BigNumber operator |(BigNumber other) {
     return or(other);
   }
 
-  BigNumber operator ^ (BigNumber other) {
+  BigNumber operator ^(BigNumber other) {
     return xor(other);
   }
 
-  BigNumber operator << (int value) {
+  BigNumber operator <<(int value) {
     return shl(value);
   }
 
-  BigNumber operator >> (int value) {
+  BigNumber operator >>(int value) {
     return shr(value);
   }
 
@@ -272,19 +276,19 @@ class BigNumber {
     return toString() == other.toString();
   }
 
-  bool operator < (BigNumber other) {
+  bool operator <(BigNumber other) {
     return lt(other);
   }
 
-  bool operator <= (BigNumber other) {
+  bool operator <=(BigNumber other) {
     return lte(other);
   }
 
-  bool operator > (BigNumber other) {
+  bool operator >(BigNumber other) {
     return gt(other);
   }
 
-  bool operator >= (BigNumber other) {
+  bool operator >=(BigNumber other) {
     return gte(other);
   }
 
@@ -321,7 +325,7 @@ String toHex(dynamic value) {
     }
 
     // Add a "0x" prefix if missing
-    if (!value.contains("0x")) {
+    if (!value.startsWith("0x")) {
       value = "0x$value";
     }
 

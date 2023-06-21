@@ -406,7 +406,7 @@ class BN {
       for (var i = 0; i < length; i++) {
         var w = words[i];
         var word = (((w << off) | carry) & 0xffffff).toRadixString(16);
-        carry = (w >> (24 - off)) & 0xffffff;
+        carry = (w >>> (24 - off)) & 0xffffff;
         off += 2;
         if (off >= 26) {
           off -= 26;
